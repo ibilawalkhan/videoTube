@@ -221,7 +221,6 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    console.log("In update account")
 
     const { fullName, email } = req.body
 

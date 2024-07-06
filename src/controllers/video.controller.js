@@ -4,7 +4,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.body
 
@@ -47,7 +46,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         totalVideos,
         totalPages,
         currentPage: page,
-        pageeSize: limit
+        pageSize: limit
     }
 
     return res.status(200).json(
@@ -107,9 +106,75 @@ const publishAVideo = asyncHandler(async (req, res) => {
     )
 })
 
-const getVideoById = asyncHandler(async (req, res) => { })
+const getVideoById = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
 
-const updateVideo = asyncHandler(async (req, res) => { })
+    if (!videoId) {
+        throw new ApiError(400, "Video id is required")
+    }
+
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(404, "Video not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, video, "Video fetched successfully")
+    )
+})
+
+const updateVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    const { title, description, duration } = req.body
+
+    if (!videoId) {
+        throw new ApiError(400, "Video id is required")
+    }
+
+    if (!title || !description || !duration) {
+        throw new ApiError(400, "All fields are required")
+    }
+
+    let videoUrl
+    let thumbnailUrl
+
+    const videoLocalPath = req.files?.videoFile[0]?.path
+    const thumbnailLocalPath = req.files?.thumbnail[0]?.path
+
+    if (videoLocalPath) {
+        videoUrl = await uploadOnCloudinary(videoLocalPath)
+    }
+    if (thumbnailLocalPath) {
+        thumbnailUrl = await uploadOnCloudinary(thumbnailLocalPath)
+    }
+
+    const updateFields = {
+        title,
+        description,
+        duration,
+        owner: req.user?._id
+    }
+
+    if (videoUrl) {
+        updateFields.videoFile = videoUrl.url
+    }
+    if (thumbnailUrl) {
+        updateFields.thumbnail = thumbnailUrl.url
+    }
+
+    const updatedVideo = await Video.findByIdAndUpdate(videoId, {
+        $set: updateFields,
+    }, { new: true })
+
+    if (!updatedVideo) {
+        throw new ApiError(404, "Video not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, updatedVideo, "Video updated successfully")
+    )
+})
 
 const deleteVideo = asyncHandler(async (req, res) => { })
 

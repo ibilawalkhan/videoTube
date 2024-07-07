@@ -44,6 +44,6 @@ router
         }
     ]), updateVideo)
 
-router.route("/toggle/publish/:video").patch(togglePublishStatus)
+router.route("/toggle/publish/:videoId").patch(togglePublishStatus)
 
 export default router

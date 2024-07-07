@@ -7,6 +7,7 @@ import subscriptionRouter from './routes/subscription.routes.js'
 import videoRouter from './routes/videoRouter.routes.js'
 import healthcheck from './routes/healthcheck.routes.js'
 import comment from './routes/comment.routes.js'
+import likeRouter from './routes/like.routes.js'
 
 const app = express()
 
@@ -25,5 +26,6 @@ app.use("/api/v1/tweets", tweetRouter)
 app.use("/api/v1/subscription", subscriptionRouter)
 app.use("/api/v1/videos", videoRouter)
 app.use("/api/v1/video-comment", comment)
+app.use("/api/v1/likes", likeRouter)
 
 export { app } 

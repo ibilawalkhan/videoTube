@@ -8,6 +8,8 @@ import videoRouter from './routes/videoRouter.routes.js'
 import healthcheck from './routes/healthcheck.routes.js'
 import comment from './routes/comment.routes.js'
 import likeRouter from './routes/like.routes.js'
+import playlist from './routes/playlist.routes.js'
+import dashboard from './routes/dashboard.routes.js'
 
 const app = express()
 
@@ -27,5 +29,7 @@ app.use("/api/v1/subscription", subscriptionRouter)
 app.use("/api/v1/videos", videoRouter)
 app.use("/api/v1/video-comment", comment)
 app.use("/api/v1/likes", likeRouter)
+app.use("/api/v1/playlist", playlist)
+app.use("/api/v1/dashboard", dashboard)
 
 export { app } 

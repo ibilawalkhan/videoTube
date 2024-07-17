@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+
+
 import userRouter from './routes/user.routes.js'
 import tweetRouter from './routes/tweet.routes.js'
 import subscriptionRouter from './routes/subscription.routes.js'
@@ -21,6 +23,7 @@ app.use(express.json({ limit: '16kb' }))
 app.use(express.urlencoded({ extended: true, limit: '16kb' }))
 app.use(express.static('public'))
 app.use(cookieParser())
+
 
 app.use("/api/v1/health-check", healthcheck)
 app.use("/api/v1/users", userRouter)
